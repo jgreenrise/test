@@ -33,11 +33,13 @@ public class OrderBOImplTest {
 	@Test
 	public void test_place_order_Should_create_order() throws SQLException, BOException {
 		Order order = new Order();
-		when(dao.create(order)).thenReturn(new Integer(1));
+		when(dao.create(any(Order.class))).thenReturn(new Integer(1));
 		boolean result = bo.placeOrder(order);
 
 		assertTrue(result);
 		verify(dao).create(order);
+		verify(dao, times(1)).create(order);
+		verify(dao, atLeast(1)).create(order);
 
 	}
 
@@ -63,7 +65,7 @@ public class OrderBOImplTest {
 	public void test_cancel_order_Should_cancel_order_successfully() throws SQLException, BOException {
 
 		Order order = new Order();
-		when(dao.read(123)).thenReturn(order);
+		when(dao.read(anyInt())).thenReturn(order);
 		when(dao.update(order)).thenReturn(1);
 
 		boolean result = bo.cancelorder(123);
@@ -72,12 +74,12 @@ public class OrderBOImplTest {
 		verify(dao).read(123);
 		verify(dao).update(order);
 	}
-
+	
 	@Test
 	public void test_cancel_order_Should_fail() throws SQLException, BOException {
 
 		Order order = new Order();
-		when(dao.read(123)).thenReturn(order);
+		when(dao.read(anyInt())).thenReturn(order);
 		when(dao.update(order)).thenReturn(0);
 
 		boolean result = bo.cancelorder(123);
@@ -102,5 +104,26 @@ public class OrderBOImplTest {
 
 		boolean result = bo.cancelorder(123);
 	}
-
+	
+	@Test
+	public void test_deleteOrder_Should_pass() throws SQLException, BOException{
+		Order order = new Order();
+		when(dao.delete(123)).thenReturn(1);
+		assertTrue(bo.deleteOrder(123));
+	}
+	
+	@Test
+	public void test_deleteOrder_Should_fail() throws SQLException, BOException{
+		Order order = new Order();
+		when(dao.delete(123)).thenReturn(0);
+		assertFalse(bo.deleteOrder(123));
+	}
+	
+	@Test(expected=BOException.class)
+	public void test_deleteOrder_Should_throw_BOException() throws SQLException, BOException{
+		Order order = new Order();
+		when(dao.delete(123)).thenThrow(SQLException.class);
+		bo.deleteOrder(123);
+	}
+	
 }

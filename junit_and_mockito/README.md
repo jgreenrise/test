@@ -14,5 +14,8 @@ Controller -> ServiceBusinessObject -> DAO -> DB
 
 Mockito
 
+Blog
 http://www.codeproject.com/Articles/516360/Mockito-a-great-mock-framework-for-Java-developmen
+
+Video explanation
 http://www.canoo.com/blog/2010/12/15/mockito-screencasts-for-stubbing-verifying-and-argument-matching/comment-page-1/#comment-3197
